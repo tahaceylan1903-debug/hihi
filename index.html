@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muahh 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0814;
+      --card-bg: rgba(22, 18, 38, 0.75);
+      --card-border: rgba(180, 140, 255, 0.2);
+      --accent: #a855f7;
+      --accent-pink: #ec4899;
+      --text-main: #f3e8ff;
+      --text-muted: #c084fc;
+      --shadow: 0 8px 32px 0 rgba(140, 40, 255, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    #stars-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 0.9; transform: scale(1.2); }
+    }
+
+    header {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+
+    header h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3.5rem;
+      background: linear-gradient(135deg, #f472b6, #c084fc, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.4));
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto 25px;
+    }
+
+    .counter-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      padding: 20px;
+      border-radius: 20px;
+      display: inline-flex;
+      gap: 20px;
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+    }
+
+    .counter-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .counter-num {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #f472b6;
+    }
+
+    .counter-label {
+      font-size: 0.8rem;
+      color: #a78bfa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-pink));
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 6px 20px rgba(236, 72, 153, 0.6);
+    }
+
+    .timeline-container {
+      position: relative;
+      max-width: 900px;
+      margin: 40px auto 100px;
+      padding: 0 20px;
+      z-index: 2;
+    }
+
+    .timeline-line {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(to bottom, #ec4899, #a855f7, #3b82f6);
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 60px;
+      width: 50%;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease-out;
+    }
+
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .timeline-item.left {
+      left: 0;
+      padding-right: 40px;
+    }
+
+    .timeline-item.right {
+      left: 50%;
+      padding-left: 40px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      top: 20px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #1e1b4b;
+      border: 3px solid var(--accent-pink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      z-index: 3;
+      box-shadow: 0 0 15px rgba(236, 72, 153, 0.8);
+    }
+
+    .timeline-item.left .timeline-dot { right: -22px; }
+    .timeline-item.right .timeline-dot { left: -22px; }
+
+    .timeline-content {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .timeline-date {
+      display: inline-block;
+      padding: 5px 12px;
+      background: rgba(168, 85, 247, 0.2);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      border-radius: 15px;
+      font-size: 0.85rem;
+      color: #f472b6;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .timeline-content h3 {
+      font-size: 1.4rem;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .timeline-content p {
+      color: #d8b4fe;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .timeline-img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-top: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-box {
+      background: #161226;
+      border: 1px solid var(--accent);
+      width: 90%;
+      max-width: 450px;
+      padding: 30px;
+      border-radius: 24px;
+      box-shadow: 0 10px 40px rgba(168, 85, 247, 0.3);
+      position: relative;
+    }
+
+    .modal-box h2 {
+      color: #f472b6;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 10px;
+      color: #fff;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.5rem;
+      color: #aaa;
+      cursor: pointer;
+    }
+
+    .floating-heart {
+      position: fixed;
+      pointer-events: none;
+      font-size: 20px;
+      z-index: 9999;
+      animation: floatUp 1.2s ease-out forwards;
+    }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-80px) scale(1.5); }
+    }
+
+    @media (max-width: 768px) {
+      .timeline-line { left: 30px; }
+      .timeline-item { width: 100%; left: 0 !important; padding-left: 70px !important; padding-right: 0 !important; }
+      .timeline-dot { left: 8px !important; }
+      header h1 { font-size: 2.5rem; }
+      .counter-card { gap: 10px; padding: 15px; }
+      .counter-num { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="stars-container"></div>
+
+  <header>
+    <h1>Bizim Hikayemiz ✨</h1>
+    <p>İlk mesajımızdan başlayan ve her gün daha da büyüyen özel anlarımızzzz hihi</p>
+    
+    <div class="counter-card">
+      <div class="counter-item">
+        <span class="counter-num" id="days">0</span>
+        <span class="counter-label">Gün</span>
+      </div>
+      <div class="counter-item">
+        <span class="counter-num" id="hours">0</span>
+        <span class="counter-label">Saat</span>
+      </div>
+      <div class="counter-item">
+        <span class="counter-num" id="minutes">0</span>
+        <span class="counter-label">Dakika</span>
+      </div>
+      <div class="counter-item">
+        <span class="counter-num" id="seconds">0</span>
+        <span class="counter-label">Saniye</span>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn" onclick="openModal()">+ Yeni Anı Ekle</button>
+      <button class="btn" onclick="setCustomDate()">📅 Tarihi Değiştir</button>
+    </div>
+  </header>
+
+  <div class="timeline-container">
+    <div class="timeline-line"></div>
+    <div id="timeline-items"></div>
+  </div>
+
+  <div class="modal-overlay" id="add-modal">
+    <div class="modal-box">
+      <span class="close-btn" onclick="closeModal()">×</span>
+      <h2>Yeni Bir Anı Ekle 💖</h2>
+      <form id="memory-form">
+        <div class="form-group">
+          <label>Başlık</label>
+          <input type="text" id="m-title" placeholder="Örn: İlk Gezimiz" required>
+        </div>
+        <div class="form-group">
+          <label>Tarih</label>
+          <input type="text" id="m-date" placeholder="Örn: 15 Ekim 2026" required>
+        </div>
+        <div class="form-group">
+          <label>Açıklama / Not</label>
+          <textarea id="m-desc" rows="3" placeholder="O an hissettiklerin..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Fotoğraf Dosya Adı (Örn: yeni-ani.jpg)</label>
+          <input type="text" id="m-img" placeholder="yeni-ani.jpg">
+          <input type="file" id="m-file" accept="image/*" style="margin-top: 8px;">
+        </div>
+        <button type="submit" class="btn" style="width: 100%; margin-top: 10px;">Kaydet ve Ekle</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let startDate = new Date("2026-07-01T00:00:00");
+
+    // FOTOĞRAF DOSYA İSİMLERİ BURADA:
+    let memories = [
+      {
+        title: "İlk Mesajlaşmamız 💬",
+        date: "İlk Gün...",
+        desc: "Her şey o ilk mesajla başladıı iyiki de başlamış afferim taha dünyalar güzeli bir kız bulmuşum",
+        icon: "💬",
+        img: "ilk-mesaj.jpg" // 1. Fotoğrafın ismi
+      },
+      {
+        title: "İlk defa seni seviyorum dediğin an",
+        date: "Unutulmaz Gece",
+        desc: "Aynı anda başlatıp ekran karşısında birlikte güldüğümüz, heyecanlandığımız o ilk ortak seyir keyfi.",
+        icon: "🍿",
+        img: "ilk-anime.jpg" // 2. Fotoğrafın ismi
+      },
+      {
+        title: "İlk Couple 🤭",
+        date: "Gülümseten Bir Anı",
+        desc: "İlk couple yaptığımız couple buydu aşkımm.",
+        icon: "🕊️",
+        img: "ilk-tartisma.jpg" // 3. Fotoğrafın ismi
+      },
+      {
+        title: "Saatlerce Süren Gece Sohbetleri 🌙",
+        date: "Sabahın İlk Işıkları",
+        desc: "Uykumuz gelmesine rağmen konuştuğumuzz günn 7 saattir sesteydik saat sabahın 7 si",
+        icon: "✨",
+        img: "gece-sohbetleri.jpg" // 4. Fotoğrafın ismi
+      },
+      {
+        title: "Geçirdiğim en iyi doğum günüm 🚀",
+        date: "Ve Her Zaman Öyle Kalacak",
+        desc: " Seninle geçirdiğim her an benim için çok değerli o gün doğum günümü kutladığındada çok mutlu oldumm bana verdiğin en büyük hediyelerden biride beni her zaman düşünüyor olman teşekkür ederimm aşkımm",
+        icon: "💖",
+        img: "hayallerimiz.jpg" // 5. Fotoğrafın ismi
+      }
+    ];
+
+    function createStars() {
+      const container = document.getElementById('stars-container');
+      for (let i = 0; i < 70; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.width = `${Math.random() * 3 + 1}px`;
+        star.style.height = star.style.width;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.animationDelay = `${Math.random() * 3}s`;
+        container.appendChild(star);
+      }
+    }
+
+    function updateCounter() {
+      const now = new Date();
+      const diff = now - startDate;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / 1000 / 60) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById('days').innerText = days;
+      document.getElementById('hours').innerText = hours;
+      document.getElementById('minutes').innerText = minutes;
+      document.getElementById('seconds').innerText = seconds;
+    }
+
+    function renderTimeline() {
+      const container = document.getElementById('timeline-items');
+      container.innerHTML = '';
+
+      memories.forEach((item, index) => {
+        const side = index % 2 === 0 ? 'left' : 'right';
+        const div = document.createElement('div');
+        div.className = `timeline-item ${side}`;
+
+        div.innerHTML = `
+          <div class="timeline-dot">${item.icon || '💖'}</div>
+          <div class="timeline-content">
+            <span class="timeline-date">${item.date}</span>
+            <h3>${item.title}</h3>
+            <p>${item.desc}</p>
+            ${item.img ? `<img src="${item.img}" class="timeline-img" alt="${item.title}" onerror="this.style.display='none'">` : ''}
+          </div>
+        `;
+
+        container.appendChild(div);
+      });
+
+      observeScroll();
+    }
+
+    function observeScroll() {
+      const items = document.querySelectorAll('.timeline-item');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.2 });
+
+      items.forEach(item => observer.observe(item));
+    }
+
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('button') || e.target.closest('.modal-box')) return;
+      
+      const hearts = ['💖', '✨', '💜', '🌸', '💫'];
+      const heart = document.createElement('div');
+      heart.className = 'floating-heart';
+      heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+      heart.style.left = `${e.clientX - 10}px`;
+      heart.style.top = `${e.clientY - 10}px`;
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 1200);
+    });
+
+    function openModal() { document.getElementById('add-modal').classList.add('active'); }
+    function closeModal() { document.getElementById('add-modal').classList.remove('active'); }
+
+    function setCustomDate() {
+      const input = prompt("Tanışma tarihinizi YYYY-AA-GG formatında girin (Örn: 2026-05-01):");
+      if (input) {
+        const newD = new Date(input);
+        if (!isNaN(newD)) {
+          startDate = newD;
+          updateCounter();
+        } else {
+          alert("Tarih formatı hatalı. Örnek: 2026-05-01");
+        }
+      }
+    }
+
+    document.getElementById('memory-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const title = document.getElementById('m-title').value;
+      const date = document.getElementById('m-date').value;
+      const desc = document.getElementById('m-desc').value;
+      let img = document.getElementById('m-img').value;
+      const fileInput = document.getElementById('m-file');
+
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          memories.push({ title, date, desc, img: e.target.result, icon: '📸' });
+          renderTimeline();
+          closeModal();
+          e.target.reset();
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        if (!img) img = "ilk-mesaj.jpg";
+        memories.push({ title, date, desc, img, icon: '✨' });
+        renderTimeline();
+        closeModal();
+        this.reset();
+      }
+    });
+
+    createStars();
+    renderTimeline();
+    updateCounter();
+    setInterval(updateCounter, 1000);
+  </script>
+</body>
+</html>
